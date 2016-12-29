@@ -20,7 +20,7 @@ from flask import Flask, request, jsonify
 from summa import keywords
 
 from flask import Flask, request
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 class InvalidUsage(Exception):
     status_code = 400
@@ -39,7 +39,7 @@ class InvalidUsage(Exception):
 
 @app.route('/')
 def hello():
-    return "text summarized API"
+    return app.send_static_file('index.html')
 
 @app.route('/summary', methods = ['GET', 'POST'])
 def summary():
