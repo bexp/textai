@@ -29,7 +29,7 @@ $(document).ready(function(){
             var obj = JSON.parse(response)
             $("#title").text('Title: ' + obj.title).css("font-weight", "bold");
             $("#summary").text(obj.text);
-            $("#keywords").text('keywords: ' + obj.keywords);
+            $("#keywords").text('keywords: ' + obj.keywords).css("font-style", "italic");
             $("#bar1").show();
             $("#bar2").show();
           },

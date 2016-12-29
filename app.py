@@ -94,5 +94,4 @@ def main(url, title):
   sentences = tt.summarize(title, text)
   return ' '.join(sentences)
 if __name__ == "__main__":
-  #main(sys.argv[1:])
-  app.run(port = 8080, debug = True)
+  app.run(port = 80, host = "0.0.0.0" debug = True)
