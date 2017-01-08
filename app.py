@@ -41,6 +41,10 @@ class InvalidUsage(Exception):
 def hello():
     return app.send_static_file('index.html')
 
+@app.route('/feed')
+def feed():
+    return app.send_static_file('feed.html')
+
 @app.route('/summary', methods = ['GET', 'POST'])
 def summary():
    url = request.data
