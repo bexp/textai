@@ -11,7 +11,13 @@ import sys
 import re
 import urllib2, httplib
 from bs4 import BeautifulSoup
-from flask import Flask, request, jsonify
+from datetime import datetime
+import treq
+from klein import Klein
+from twisted.internet.defer import inlineCallbacks, returnValue
+from twisted.internet import defer, threads
+from twisted.web.static import File
+import json
 
 #keywords extraction
 #https://github.com/summanlp/textrank
@@ -19,8 +25,8 @@ from flask import Flask, request, jsonify
 #from summa.summarizer import summarize
 from summa import keywords
 
-from flask import Flask, request
-app = Flask(__name__, static_url_path='')
+cache = {}
+app = Klein()
 
 class InvalidUsage(Exception):
     status_code = 400
@@ -37,34 +43,48 @@ class InvalidUsage(Exception):
         rv['message'] = self.message
         return rv
 
-@app.route('/')
-def hello():
-    return app.send_static_file('index.html')
+@app.route('/', branch=True)
+def hello(request):
+    return File('./static/')
 
-@app.route('/feed')
-def feed():
-    return app.send_static_file('feed.html')
+@app.route('/feed', branch=True)
+def feed(request):
+    return File('./static/feed.html')
 
 @app.route('/summary', methods = ['GET', 'POST'])
-def summary():
-   url = request.data
+@inlineCallbacks
+def summary(request):
+   request.setHeader('Content-Type', 'application/json')
+   url = request.content.read()
+
    if not url:
        raise InvalidUsage('request body is empty', status_code=400)
-   try:
-       title = get_title(url)
-       summary = main(url, title)
-       return jsonify(title=title,
-                       text=summary,
-                       keywords=get_keywords(summary))
-   except:
-       e = sys.exc_info()[0]
-       raise InvalidUsage("server error: " + str(e), status_code=500)
 
+   if url in cache:
+       defer.returnValue(cache[url])
+   else:
+       # try:
+       title = yield threads.deferToThread(get_title, url)
+       summary = yield threads.deferToThread(main, url, title)
+
+       if len(summary) > 0:
+           keywords = yield threads.deferToThread(get_keywords, summary)
+           cache[url] = json.dumps({'title': title, 'text': summary, 'keywords': keywords})
+           defer.returnValue(cache[url])
+
+      
+       #print 'stop: ', str(datetime.now())
+       defer.returnValue(succeed(None))
+   #except:
+      # e = sys.exc_info()[0]
+       #raise InvalidUsage("server error: " + str(e), status_code=500)
+'''
 @app.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
+'''
 
 'extract title from web page'
 def get_title(url):
@@ -79,7 +99,7 @@ def get_title(url):
   return soup.title.string
 
 def get_keywords(text):
-  print 'keywords:'
+  #print 'keywords:'
   keywordz = keywords.keywords(text, words=5)
   keyz = sorted(keywordz.split(), key=len)
 
@@ -92,10 +112,10 @@ def get_keywords(text):
   return ', '.join(list(set(keyz) - set(to_remove)))
 
 def main(url, title):
-  print 'processing ', url, '\n'
+  print ' start processing ', url, '\n'
   text = v2.extract(url)
   tt = TextTeaser()
   sentences = tt.summarize(title, text)
   return ' '.join(sentences)
 if __name__ == "__main__":
-  app.run(port = 80, host = "0.0.0.0", debug = True)
+  app.run("localhost", 8080)
