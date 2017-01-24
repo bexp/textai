@@ -1,6 +1,4 @@
-# textai
-REST API for Text Summarization and Keywords Extraction
+## TextAI
+REST API for Text Summarization and Keywords Extraction from a given URL
 
-*/static* folder contains few examples 
-- index.html any web page summarization
-- feed.html summarization of top 10 HackerNews articles
+View in action at http://HN10.org
