@@ -1,0 +1,56 @@
+<style type="text/css">
+.bold {
+ font-weight:bold;
+}
+.italic {
+font-style:italic;
+}
+.underline {
+    text-decoration: underline;
+}
+</style>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#bar1").hide();
+  $("#bar2").hide();
+
+    $("button").click(function(){
+        var url = $('input[name="why"]').val();
+        $.ajax({
+          url:"summary",
+          type:"POST",
+          data:url,
+          contentType:"text",
+          dataType:"text",
+          success: function(response){
+            //alert("success:" + JSON.stringify(response));
+            var obj = JSON.parse(response)
+            $("#title").text('Title: ' + obj.title).css("font-weight", "bold");
+            $("#summary").text(obj.text);
+            $("#keywords").text('keywords: ' + obj.keywords).css("font-style", "italic");
+            $("#bar1").show();
+            $("#bar2").show();
+          },
+          error: function(jqXHR,textStatus,errorThrown ) {
+            alert('request failed :'+ errorThrown);
+          }
+        });
+    });
+});
+</script>
+</head>
+<body>
+
+<input type="text" name="why" id="why" maxlength="300" size="200" value="https://techcrunch.com/2016/12/28/amazon-patents-show-flying-warehouses-that-send-delivery-drones-to-your-door/">
+<button>get summary</button>
+<br><br>
+<div id="title"></div>
+<hr id="bar1">
+<div id="summary"></div>
+<hr id="bar2">
+<div id="keywords"></div>
+
+</body>
+</html>
