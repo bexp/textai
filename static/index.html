@@ -22,7 +22,7 @@ $(document).ready(function() {
   var HN_ITEM_ENDPOINT = HACKER_NEWS_API_V0+'item/';
   var HN_TOP_STORIES_ENDPOINT = HACKER_NEWS_API_V0+'topstories.json';
 
-  var get_summary = function(url, item_id) {
+  var get_summary = function(url, item_id, comments) {
     $.ajax({
       url:"summary",
       type:"POST",
@@ -33,7 +33,7 @@ $(document).ready(function() {
         var obj = JSON.parse(response)
         $("#" + item_id).append($("<div>" + obj.text + "</div>").css('margin', 10));
         $("#" + item_id + " div:first").append($("<p/>").text("keywords: "+obj.keywords + " | ").attr('class','subtext'));
-        $("#" + item_id + " p:first").append($("<a/>").text("comments").attr('href', 'http://news.ycombinator.com/item?id=' + item_id).attr('class','sublink'));
+        $("#" + item_id + " p:first").append($("<a/>").text(comments + " comments").attr('href', 'http://news.ycombinator.com/item?id=' + item_id).attr('class','sublink'));
       },
       error: function(jqXHR, textStatus, errorThrown ) {
         console.log('request failed :'+ errorThrown);
@@ -47,7 +47,7 @@ $(document).ready(function() {
         $("#" + item_id).append($("<a/>").text((index + 1).toString() + ". " + data.title)
           .attr("href", data.url)
           .css({'padding-left':'4px', 'color':'#000000', 'text-decoration':'none', 'font-weight':'bold'}));
-        get_summary(data.url, item_id);
+        get_summary(data.url, item_id, data.descendants);
     }).fail(function() {
         console.log("get_story error");
     });
