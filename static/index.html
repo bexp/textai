@@ -2,6 +2,7 @@
 <style type="text/css">
 .subtext { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-top:3px }
 .sublink { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-top:3px }
+.bookmark { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-right:5px; float: right }
 #sharing {
   position: absolute;
   bottom: 10;
@@ -17,6 +18,21 @@ var webengage; !function(w,e,b,n,g){function o(e,t){e[t[t.length-1]]=function(){
 webengage.init("~71680151");
 </script>
 <script>
+$(function() {
+  $('#bookmarkme').click(function() {
+    if (window.sidebar && window.sidebar.addPanel) { // Mozilla Firefox Bookmark
+      window.sidebar.addPanel(document.title, window.location.href, '');
+    } else if (window.external && ('AddFavorite' in window.external)) { // IE Favorite
+      window.external.AddFavorite(location.href, document.title);
+    } else if (window.opera && window.print) { // Opera Hotlist
+      this.title = document.title;
+      return true;
+    } else { // webkit - safari/chrome
+      alert('Press ' + (navigator.userAgent.toLowerCase().indexOf('mac') != -1 ? 'Command/Cmd' : 'CTRL') + ' + D to bookmark this page.');
+    }
+  });
+});
+
 $(document).ready(function() {
   var HACKER_NEWS_API_V0 = 'https://hacker-news.firebaseio.com/v0/';
   var HN_ITEM_ENDPOINT = HACKER_NEWS_API_V0+'item/';
@@ -56,7 +72,7 @@ $(document).ready(function() {
   $.getJSON(HN_TOP_STORIES_ENDPOINT).done(function(data) {
   	//console.log(data);
     $.each(data, function(index, value){
-      if (index > 9) {
+      if (index > 19) {
         return false;
       }
 
@@ -84,6 +100,7 @@ $(document).ready(function() {
 <meta name="description" content="Realtime Summary of HackerNews without you spending time reading it, done with machine learning summarization algorithm">
 <body style="background-color:#F6F6EF">
   <h4 style="background-color:#FF6600;padding-left:4px;margin:5px">RealTime Hacker News Summary</h4>
+  <a class="bookmark" id="bookmarkme" href="#" rel="sidebar" title="bookmark this page">Bookmark This Page</a>
   <div id="content" style="background-color:#F6F6EF"/>
 </body>
 </html>
