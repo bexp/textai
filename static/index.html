@@ -3,11 +3,10 @@
 .subtext { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-top:3px }
 .sublink { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-top:3px }
 .bookmark { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-right:5px; float: right }
-#sharing {
-  position: absolute;
-  bottom: 10;
-  right: 0;
-}
+.bodytext { font-family:Verdana }
+.storytitle { color:#000000; text-decoration:none; font-weight:bold;}
+.rank { font-family:Verdana, Geneva, sans-serif; font-size:  10pt; color:#828282;text-align: -webkit-right; width: auto }
+
 </style>
 <html>
 <head>
@@ -47,8 +46,8 @@ $(document).ready(function() {
       dataType:"text",
       success: function(response){
         var obj = JSON.parse(response)
-        $("#" + item_id).append($("<div>" + obj.text + "</div>").css('margin', 10));
-        $("#" + item_id + " div:first").append($("<p/>").text("keywords: "+obj.keywords + " | ").attr('class','subtext'));
+        $("#" + item_id).append($("<div>" + obj.text + "</div>").css('padding-left', 16).css('padding-top', 10));
+        $("#" + item_id + " div:first").append($("<p/>").text("keywords: " + obj.keywords + " | ").attr('class','subtext'));
         $("#" + item_id + " p:first").append($("<a/>").text(comments + " comments").attr('href', 'http://news.ycombinator.com/item?id=' + item_id).attr('class','sublink'));
       },
       error: function(jqXHR, textStatus, errorThrown ) {
@@ -60,9 +59,10 @@ $(document).ready(function() {
   var get_story = function(index, item_id) {
     var item_url = HN_ITEM_ENDPOINT + item_id + ".json";
     $.getJSON(item_url).done(function(data) {
-        $("#" + item_id).append($("<a/>").text((index + 1).toString() + ". " + data.title)
+        $("#" + item_id).append($("<span/>").text((index + 1).toString() + ". ").attr('class','rank'))
+        $("#" + item_id).append($("<a/>").text(data.title)
           .attr("href", data.url)
-          .css({'padding-left':'4px', 'color':'#000000', 'text-decoration':'none', 'font-weight':'bold'}));
+          .attr("class", "storytitle"));
         get_summary(data.url, item_id, data.descendants);
     }).fail(function() {
         console.log("get_story error");
@@ -76,7 +76,7 @@ $(document).ready(function() {
         return false;
       }
 
-      $("#content").append($("<div/>").attr("id", value));
+      $("#content").append($("<div/>").attr("id", value).css('padding', '5'));
 
       get_story(index, value);
     });
@@ -99,7 +99,7 @@ $(document).ready(function() {
 <title>Realtime Summary of Top HackerNews stories</title>
 <meta name="description" content="Realtime Summary of HackerNews without you spending time reading it, done with machine learning summarization algorithm">
 <body style="background-color:#F6F6EF">
-  <h4 style="background-color:#FF6600;padding:6px;margin:5px;font-family:Verdana, Geneva, sans-serif; font-size: 10pt;">RealTime Hacker News Summary</h4>
+  <h4 style="background-color:#FF6600;padding:6px;margin:3px;font-family:Verdana, Geneva, sans-serif; font-size: 10pt;">RealTime Hacker News Summary</h4>
   <a class="bookmark" id="bookmarkme" href="#" rel="sidebar" title="bookmark this page">Bookmark This Page</a>
   <div id="content" style="background-color:#F6F6EF"/>
 </body>
