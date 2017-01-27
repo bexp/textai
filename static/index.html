@@ -30,6 +30,7 @@ $(document).ready(function() {
   var HACKER_NEWS_API_V0 = 'https://hacker-news.firebaseio.com/v0/';
   var HN_ITEM_ENDPOINT = HACKER_NEWS_API_V0+'item/';
   var HN_TOP_STORIES_ENDPOINT = HACKER_NEWS_API_V0+'topstories.json';
+  var MAX_STORIES = 20;
 
   var get_summary = function(url, item_id, comments) {
     $.ajax({
@@ -40,7 +41,7 @@ $(document).ready(function() {
       dataType:"text",
       success: function(response){
         var obj = JSON.parse(response)
-        $("#" + item_id).append($("<div>" + obj.text + "</div>").css('padding-left', 16).css('padding-top', 10).attr('class','bodytext'));
+        $("#" + item_id).append($("<div>" + obj.text + "</div>").attr('class','bodytext'));
         $("#" + item_id + " div:first").append($("<p/>").text("keywords: " + obj.keywords + " | ").attr('class','subtext'));
         $("#" + item_id + " p:first").append($("<a/>").text(comments + " comments").attr('href', 'http://news.ycombinator.com/item?id=' + item_id).attr('class','sublink'));
         $("#" + item_id).append($("<hr/>"))
@@ -54,27 +55,20 @@ $(document).ready(function() {
   var get_story = function(index, item_id) {
     var item_url = HN_ITEM_ENDPOINT + item_id + ".json";
     $.getJSON(item_url).done(function(data) {
-	$("#" + item_id).append($("<span/>").text((index + 1).toString() + ". ").attr('class','rank'))
+	  $("#" + item_id).append($("<span/>").text((index + 1).toString() + ". ").attr('class','rank'))
         $("#" + item_id).append($("<a/>").text(data.title)
           .attr("href", data.url)
           .attr("class", "storytitle"));
         get_summary(data.url, item_id, data.descendants);
-  
     }).fail(function() {
         console.log("get_story error");
     });
   }
 
   $.getJSON(HN_TOP_STORIES_ENDPOINT).done(function(data) {
-     //console.log(data);
-     $.each(data, function(index, value){
-      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
-         if (index > 19) {
-            return false;
-     	}
-      }
+     $.each(data, function(index, value) {
 
-      if (index > 19) {
+      if (index >= MAX_STORIES) {
         return false;
       }
 
@@ -102,7 +96,7 @@ $(document).ready(function() {
 <meta name="description" content="Realtime Summary of Hacker News. Save time by not reading everything. Shield you from Ads">
 <body style="background-color:#FFFFFF">
   <div class="container">
-    <h4 style="background-color:#FF6600;padding:6px;margin:3px;font-family:Verdana, Geneva, sans-serif; font-size: 10pt;">RealTime Hacker News Summary</h4>
+    <h4>RealTime Hacker News Summary</h4>
     <a class="bookmark" id="bookmarkme" href="#" rel="sidebar" title="bookmark this page">Bookmark This Page</a>
     <div id="content"/>
   </div>

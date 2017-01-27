@@ -1,6 +1,6 @@
 .subtext { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-top:3px }
 .sublink { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-top:3px }
-.bodytext { margin:auto; padding:0 1em; line-height:1.5;  }
+.bodytext { margin:auto; padding:0 0.5em; line-height:1.5; padding-top: 10px; }
 .storytitle { color:#000000; text-decoration:none; font-weight:bold;}
 .rank { font-family:Verdana, Geneva, sans-serif; font-size:  10pt; color:#828282;text-align: -webkit-right; width: auto }
 .bookmark{display: none;}
@@ -9,10 +9,23 @@ hr {
     height: 1px;
     border: 0;
     border-top: 1px solid #ccc;
-    margin: 1em 0;
+    margin: 0.5em 0;
     padding: 0;
 }
 .container {
     background-color:#F6F6EF;
     display: block;
+}
+h4 {
+ background-color:#FF6600;
+ padding-left:20px;
+ padding-top:6px;
+ padding-bottom:6px;
+ margin-top: 3px;
+ margin-bottom: 3px;
+ font-family:Verdana, Geneva, sans-serif;
+ font-size: 10pt;
+ background-image: url( y18.gif);
+ background-position: left;
+ background-repeat: no-repeat;
 }
