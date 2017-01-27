@@ -1,0 +1,32 @@
+.subtext { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-top:3px }
+.sublink { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-top:3px }
+.bookmark { display: none}
+.bodytext { margin:auto; padding:0 1em; line-height:1.5;  }
+.storytitle { color:#000000; text-decoration:none; font-weight:bold;}
+.rank { font-family:Verdana, Geneva, sans-serif; font-size:  10pt; color:#828282;text-align: -webkit-right; width: auto }
+.bookmark{display: inline; font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-right:5px; float: right }
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+.container {
+    width: 800px;
+    max-width: 90%;
+    background-color:#F6F6EF;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.container {
+    width: 800px;
+    max-width: 90%;
+    background-color:#F6F6EF;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
