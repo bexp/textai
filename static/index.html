@@ -32,7 +32,7 @@ $(document).ready(function() {
   var HN_TOP_STORIES_ENDPOINT = HACKER_NEWS_API_V0+'topstories.json';
   var MAX_STORIES = 20;
 
-  var get_summary = function(url, item_id, comments) {
+  var get_summary = function(url, item_id, comments, score, index) {
     $.ajax({
       url:"summary",
       type:"POST",
@@ -42,12 +42,17 @@ $(document).ready(function() {
       success: function(response){
         var obj = JSON.parse(response)
         $("#" + item_id).append($("<div>" + obj.text + "</div>").attr('class','bodytext'));
-        $("#" + item_id + " div:first").append($("<p/>").text("keywords: " + obj.keywords + " | ").attr('class','subtext'));
+        $("#" + item_id + " div:first").append($("<p/>").text(score + " points | ").attr('class','subtext'));
+        $("#" + item_id + " p:first").append($("<span/>").text("keywords: " + obj.keywords + " | ").attr('class','subtext'));
         $("#" + item_id + " p:first").append($("<a/>").text(comments + " comments").attr('href', 'http://news.ycombinator.com/item?id=' + item_id).attr('class','sublink'));
-        $("#" + item_id).append($("<hr/>"))
+        if (index + 1 < MAX_STORIES) $("#" + item_id).append($("<hr/>"))
       },
       error: function(jqXHR, textStatus, errorThrown ) {
         console.log('request failed :'+ errorThrown);
+        $("#" + item_id).append($("<div/>").attr('class','bodytext'));
+        $("#" + item_id + " div:first").append($("<p/>").text(score + " points | ").attr('class','subtext'));
+        $("#" + item_id + " p:first").append($("<a/>").text(comments + " comments").attr('href', 'http://news.ycombinator.com/item?id=' + item_id).attr('class','sublink'));
+        if (index + 1 < MAX_STORIES) $("#" + item_id).append($("<hr/>"))
       }
     });
   }
@@ -59,7 +64,7 @@ $(document).ready(function() {
         $("#" + item_id).append($("<a/>").text(data.title)
           .attr("href", data.url)
           .attr("class", "storytitle"));
-        get_summary(data.url, item_id, data.descendants);
+        get_summary(data.url, item_id, data.descendants, data.score, index);
     }).fail(function() {
         console.log("get_story error");
     });
