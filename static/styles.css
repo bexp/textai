@@ -1,5 +1,6 @@
 .subtext { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-top:3px }
-.sublink { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-top:3px }
+.sublink { font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-top:3px; text-decoration: none; }
+.sublink:hover {text-decoration: underline;}
 .bodytext {
   margin:auto; padding:0 1em 0; line-height:1.5;
   padding-top: 10px;

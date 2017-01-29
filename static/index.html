@@ -26,6 +26,10 @@ $(function() {
   });
 });
 
+function extractDomain(url){
+    return url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[1].split('.').slice(-2).join('.');
+};
+
 $(document).ready(function() {
   var HACKER_NEWS_API_V0 = 'https://hacker-news.firebaseio.com/v0/';
   var HN_ITEM_ENDPOINT = HACKER_NEWS_API_V0+'item/';
@@ -64,6 +68,10 @@ $(document).ready(function() {
         $("#" + item_id).append($("<a/>").text(data.title)
           .attr("href", data.url)
           .attr("class", "storytitle"));
+        $("#" + item_id).append($("<a/>").text("(" + extractDomain(data.url) + ")")
+          .attr("href", data.url)
+          .attr('class','sublink')
+          .css('margin-left', 5));
         get_summary(data.url, item_id, data.descendants, data.score, index);
     }).fail(function() {
         console.log("get_story error");
