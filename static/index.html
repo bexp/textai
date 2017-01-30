@@ -11,6 +11,14 @@ var webengage; !function(w,e,b,n,g){function o(e,t){e[t[t.length-1]]=function(){
  webengage.init("~71680151");
 </script>
 <script>
+
+var all_stories;
+var MAX_STORIES = 20;
+var BATCH_SIZE = 20;
+var HACKER_NEWS_API_V0 = 'https://hacker-news.firebaseio.com/v0/';
+var HN_ITEM_ENDPOINT = HACKER_NEWS_API_V0+'item/';
+var HN_TOP_STORIES_ENDPOINT = HACKER_NEWS_API_V0+'topstories.json';
+
 $(function() {
   $('#bookmarkme').click(function() {
     if (window.sidebar && window.sidebar.addPanel) { // Mozilla Firefox Bookmark
@@ -26,59 +34,69 @@ $(function() {
   });
 });
 
+$(function() {
+  $('#load').click(function(){
+    if (all_stories != null) {
+      var limit =  MAX_STORIES + BATCH_SIZE < all_stories.length ? MAX_STORIES + BATCH_SIZE : all_stories.length;
+      for (index = MAX_STORIES; index < limit; index++) {
+        value = all_stories[index];
+        $("#content").append($("<div/>").attr("id", value).css('padding', '5'));
+        get_story(index, value);
+      }
+      MAX_STORIES = limit;
+    }
+  });
+});
+
 function extractDomain(url){
     return url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[1].split('.').slice(-2).join('.');
 };
 
+var get_summary = function(url, item_id, comments, score, index) {
+  $.ajax({
+    url:"summary",
+    type:"POST",
+    data:url,
+    contentType:"text",
+    dataType:"text",
+    success: function(response){
+      var obj = JSON.parse(response)
+      $("#" + item_id).append($("<div>" + obj.text + "</div>").attr('class','bodytext'));
+      $("#" + item_id + " div:first").append($("<p/>").text(score + " points | ").attr('class','subtext'));
+      $("#" + item_id + " p:first").append($("<span/>").text("keywords: " + obj.keywords + " | ").attr('class','subtext'));
+      $("#" + item_id + " p:first").append($("<a/>").text(comments + " comments").attr('href', 'http://news.ycombinator.com/item?id=' + item_id).attr('class','sublink'));
+      if (index + 1 < MAX_STORIES) $("#" + item_id).append($("<hr/>"))
+    },
+    error: function(jqXHR, textStatus, errorThrown ) {
+      console.log('request failed :'+ errorThrown);
+      $("#" + item_id).append($("<div/>").attr('class','bodytext'));
+      $("#" + item_id + " div:first").append($("<p/>").text(score + " points | ").attr('class','subtext'));
+      $("#" + item_id + " p:first").append($("<a/>").text(comments + " comments").attr('href', 'http://news.ycombinator.com/item?id=' + item_id).attr('class','sublink'));
+      if (index + 1 < MAX_STORIES) $("#" + item_id).append($("<hr/>"))
+    }
+  });
+}
+
+var get_story = function(index, item_id) {
+  var item_url = HN_ITEM_ENDPOINT + item_id + ".json";
+  $.getJSON(item_url).done(function(data) {
+  $("#" + item_id).append($("<span/>").text((index + 1).toString() + ". ").attr('class','rank'))
+      $("#" + item_id).append($("<a/>").text(data.title)
+        .attr("href", data.url)
+        .attr("class", "storytitle"));
+      $("#" + item_id).append($("<a/>").text("(" + extractDomain(data.url) + ")")
+        .attr("href", data.url)
+        .attr('class','sublink')
+        .css('margin-left', 5));
+      get_summary(data.url, item_id, data.descendants, data.score, index);
+  }).fail(function() {
+      console.log("get_story error");
+  });
+}
+
 $(document).ready(function() {
-  var HACKER_NEWS_API_V0 = 'https://hacker-news.firebaseio.com/v0/';
-  var HN_ITEM_ENDPOINT = HACKER_NEWS_API_V0+'item/';
-  var HN_TOP_STORIES_ENDPOINT = HACKER_NEWS_API_V0+'topstories.json';
-  var MAX_STORIES = 20;
-
-  var get_summary = function(url, item_id, comments, score, index) {
-    $.ajax({
-      url:"summary",
-      type:"POST",
-      data:url,
-      contentType:"text",
-      dataType:"text",
-      success: function(response){
-        var obj = JSON.parse(response)
-        $("#" + item_id).append($("<div>" + obj.text + "</div>").attr('class','bodytext'));
-        $("#" + item_id + " div:first").append($("<p/>").text(score + " points | ").attr('class','subtext'));
-        $("#" + item_id + " p:first").append($("<span/>").text("keywords: " + obj.keywords + " | ").attr('class','subtext'));
-        $("#" + item_id + " p:first").append($("<a/>").text(comments + " comments").attr('href', 'http://news.ycombinator.com/item?id=' + item_id).attr('class','sublink'));
-        if (index + 1 < MAX_STORIES) $("#" + item_id).append($("<hr/>"))
-      },
-      error: function(jqXHR, textStatus, errorThrown ) {
-        console.log('request failed :'+ errorThrown);
-        $("#" + item_id).append($("<div/>").attr('class','bodytext'));
-        $("#" + item_id + " div:first").append($("<p/>").text(score + " points | ").attr('class','subtext'));
-        $("#" + item_id + " p:first").append($("<a/>").text(comments + " comments").attr('href', 'http://news.ycombinator.com/item?id=' + item_id).attr('class','sublink'));
-        if (index + 1 < MAX_STORIES) $("#" + item_id).append($("<hr/>"))
-      }
-    });
-  }
-
-  var get_story = function(index, item_id) {
-    var item_url = HN_ITEM_ENDPOINT + item_id + ".json";
-    $.getJSON(item_url).done(function(data) {
-	  $("#" + item_id).append($("<span/>").text((index + 1).toString() + ". ").attr('class','rank'))
-        $("#" + item_id).append($("<a/>").text(data.title)
-          .attr("href", data.url)
-          .attr("class", "storytitle"));
-        $("#" + item_id).append($("<a/>").text("(" + extractDomain(data.url) + ")")
-          .attr("href", data.url)
-          .attr('class','sublink')
-          .css('margin-left', 5));
-        get_summary(data.url, item_id, data.descendants, data.score, index);
-    }).fail(function() {
-        console.log("get_story error");
-    });
-  }
-
   $.getJSON(HN_TOP_STORIES_ENDPOINT).done(function(data) {
+    all_stories = data;
      $.each(data, function(index, value) {
 
       if (index >= MAX_STORIES) {
@@ -112,6 +130,9 @@ $(document).ready(function() {
     <h4>RealTime Hacker News Summary</h4>
     <a class="bookmark" id="bookmarkme" href="#" rel="sidebar" title="bookmark this page">Bookmark This Page</a>
     <div id="content"/>
+  </div>
+  <div class="footer">
+    <p id="load" class="morelink">More...</p>
   </div>
 </body>
 </html>

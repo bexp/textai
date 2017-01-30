@@ -8,6 +8,23 @@
 .storytitle { color:#000000; text-decoration:none; font-weight:bold;}
 .rank { font-family:Verdana, Geneva, sans-serif; font-size:  10pt; color:#828282;text-align: -webkit-right; width: auto }
 .bookmark{ display: inline; font-family:Verdana, Geneva, sans-serif; font-size:  7pt; color:#828282; margin-right:5px; float: right }
+.morelink {
+  position: absolute;
+  left: 50%;
+  margin-right: -50%;
+  text-decoration: underline;
+}
+
+.footer {
+  width: 800px;
+  max-width: 90%;
+  display: block;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  position: relative;
+}
 
  h4 {
   background-color:#FF6600;
@@ -21,6 +38,10 @@
   background-image: url( y18.gif);
   background-position: left;
   background-repeat: no-repeat;
+}
+
+body {
+    padding-bottom: 30px;
 }
 
 hr {

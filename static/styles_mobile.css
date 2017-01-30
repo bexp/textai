@@ -16,6 +16,24 @@ hr {
     background-color:#F6F6EF;
     display: block;
 }
+
+.morelink {
+  position: absolute;
+  left: 50%;
+  margin-right: -50%;
+  text-decoration: underline;
+}
+
+.footer {
+  max-width: 100%;
+  display: block;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  position: relative;
+}
+
 h4 {
  background-color:#FF6600;
  padding-left:20px;
@@ -28,4 +46,8 @@ h4 {
  background-image: url( y18.gif);
  background-position: left;
  background-repeat: no-repeat;
+}
+
+body {
+    padding-bottom: 30px;
 }
