@@ -52,7 +52,17 @@ function extractDomain(url){
     return url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[1].split('.').slice(-2).join('.');
 };
 
-var get_summary = function(url, item_id, comments, score, index) {
+var get_summary = function(url, item_id, comments, score, index, text) {
+
+  if (text) {
+    $("#" + item_id).append($("<div>" + text + "</div>").attr('class','bodytext'));
+    $("#" + item_id + " div:first").append($("<span/>").text(score + " points | ").attr('class','subtext'));
+    $("#" + item_id + " div:first").append($("<span/>").text("keywords: " + " | ").attr('class','subtext'));
+    $("#" + item_id + " div:first").append($("<a/>").text(comments + " comments").attr('href', 'http://news.ycombinator.com/item?id=' + item_id).attr('class','sublink'));
+    $("#" + item_id).append($("<hr/>"))
+    return;
+  }
+
   $.ajax({
     url:"summary",
     type:"POST",
@@ -81,6 +91,11 @@ var get_story = function(index, item_id) {
   var item_url = HN_ITEM_ENDPOINT + item_id + ".json";
   $.getJSON(item_url).done(function(data) {
   $("#" + item_id).append($("<span/>").text((index + 1).toString() + ". ").attr('class','rank'))
+      if (!data.url) {
+        data.url = "http://news.ycombinator.com/item?id=" + item_id;
+        console.log("!fixed data")
+      }
+
       $("#" + item_id).append($("<a/>").text(data.title)
         .attr("href", data.url)
         .attr("class", "storytitle"));
@@ -88,7 +103,7 @@ var get_story = function(index, item_id) {
         .attr("href", data.url)
         .attr('class','sublink')
         .css('margin-left', 5));
-      get_summary(data.url, item_id, data.descendants, data.score, index);
+      get_summary(data.url, item_id, data.descendants, data.score, index, data.text);
   }).fail(function() {
       console.log("get_story error");
   });
