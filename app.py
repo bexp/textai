@@ -61,20 +61,27 @@ def summary(request):
        raise InvalidUsage('request body is empty', status_code=400)
 
    if url in cache:
+       print "cache hit for: %s" %  url
        defer.returnValue(cache[url])
    else:
-       # try:
-       title = yield threads.deferToThread(get_title, url)
-       summary = yield threads.deferToThread(main, url, title)
+       try:
+           title = yield threads.deferToThread(get_title, url)
+           summary = yield threads.deferToThread(main, url, title)
 
-       if len(summary) > 0:
-           keywords = yield threads.deferToThread(get_keywords, summary)
-           cache[url] = json.dumps({'title': title, 'text': summary, 'keywords': keywords})
+           if len(summary) > 0:
+               keywords = yield threads.deferToThread(get_keywords, summary)
+               cache[url] = json.dumps({'title': title, 'text': summary, 'keywords': keywords})
+               defer.returnValue(cache[url])
+           else:
+               cache[url] = json.dumps({'title': title, 'text': '', 'keywords': ''})
+               defer.returnValue(cache[url])
+       except Exception, e:
+           e = sys.exc_info()[0]
+           print "Exception : %s url = %s" %  (str(e), url)
+           cache[url] = json.dumps({'title': title, 'text': '', 'keywords': ''})
            defer.returnValue(cache[url])
 
-      
-       #print 'stop: ', str(datetime.now())
-       defer.returnValue(succeed(None))
+       defer.returnValue(200)
    #except:
       # e = sys.exc_info()[0]
        #raise InvalidUsage("server error: " + str(e), status_code=500)
@@ -118,4 +125,4 @@ def main(url, title):
   sentences = tt.summarize(title, text)
   return ' '.join(sentences)
 if __name__ == "__main__":
-  app.run("localhost", 8080)
+  app.run("0.0.0.0", 80)
