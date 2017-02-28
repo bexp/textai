@@ -99,7 +99,7 @@ def get_title(url):
   sys.setdefaultencoding("utf-8")
   opener = urllib2.build_opener(urllib2.HTTPCookieProcessor)
   urllib2.install_opener(opener)
-  req = urllib2.Request(url, headers={ 'User-Agent': 'Mozilla/5.0 (Windows NT 5.1; rv:10.0.1) Gecko/20100101 Firefox/10.0.1' })
+  req = urllib2.Request(url, headers={ 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.7 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.7' })
   html = urllib2.urlopen(req).read()
   soup = BeautifulSoup(html, 'html.parser')
   #texts = soup.findAll(text=True)
