@@ -78,7 +78,7 @@ def summary(request):
        except Exception, e:
            e = sys.exc_info()[0]
            print "Exception : %s url = %s" %  (str(e), url)
-           cache[url] = json.dumps({'title': title, 'text': '', 'keywords': ''})
+           cache[url] = json.dumps({'title': '', 'text': '', 'keywords': ''})
            defer.returnValue(cache[url])
 
        defer.returnValue(200)
