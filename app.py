@@ -51,6 +51,21 @@ def hello(request):
 def feed(request):
     return File('./static/feed.html')
 
+
+@app.route('/top', methods = ['GET'])
+def top(request):
+   print '/top requst args', request.args
+   d = treq.get('https://hacker-news.firebaseio.com/v0/topstories.json')
+   d.addCallback(treq.content)
+   return d
+
+@app.route('/story/<item_id>', methods = ['GET'])
+def item(request, item_id):
+   print '/story requst args', request.args
+   d = treq.get('https://hacker-news.firebaseio.com/v0/item/' + item_id + '.json')
+   d.addCallback(treq.content)
+   return d
+
 @app.route('/summary', methods = ['GET', 'POST'])
 @inlineCallbacks
 def summary(request):

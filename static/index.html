@@ -22,19 +22,11 @@
 <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script id="_webengage_script_tag" type="text/javascript">
-var webengage; !function(w,e,b,n,g){function o(e,t){e[t[t.length-1]]=function(){r.__queue.push([t.join("."),arguments])}}var i,s,r=w[b],z=" ",l="init options track screen onReady".split(z),a="feedback survey notification".split(z),c="options render clear abort".split(z),p="Open Close Submit Complete View Click".split(z),u="identify login logout setAttribute".split(z);if(!r||!r.__v){for(w[b]=r={__queue:[],__v:"6.0",user:{}},i=0;i<l.length;i++)o(r,[l[i]]);for(i=0;i<a.length;i++){for(r[a[i]]={},s=0;s<c.length;s++)o(r[a[i]],[a[i],c[s]]);for(s=0;s<p.length;s++)o(r[a[i]],[a[i],"on"+p[s]])}for(i=0;i<u.length;i++)o(r.user,["user",u[i]]);setTimeout(function(){var f=e.createElement("script"),d=e.getElementById("_webengage_script_tag");f.type="text/javascript",f.async=!0,f.src=("https:"==e.location.protocol?"https://ssl.widgets.webengage.com":"http://cdn.widgets.webengage.com")+"/js/webengage-min-v-6.0.js",d.parentNode.insertBefore(f,d)})}}(window,document,"webengage");
-
- webengage.init("~71680151");
-</script>
 <script>
 
 var all_stories;
 var MAX_STORIES = 20;
 var BATCH_SIZE = 20;
-var HACKER_NEWS_API_V0 = 'https://hacker-news.firebaseio.com/v0/';
-var HN_ITEM_ENDPOINT = HACKER_NEWS_API_V0+'item/';
-var HN_TOP_STORIES_ENDPOINT = HACKER_NEWS_API_V0+'topstories.json';
 
 $(function() {
   $('#bookmarkme').click(function() {
@@ -105,7 +97,7 @@ var get_summary = function(url, item_id, comments, score, index, text) {
 }
 
 var get_story = function(index, item_id) {
-  var item_url = HN_ITEM_ENDPOINT + item_id + ".json";
+  var item_url = "story/" + item_id;
   $.getJSON(item_url).done(function(data) {
   $("#" + item_id).append($("<span/>").text((index + 1).toString() + ". ").attr('class','rank'))
       if (!data.url) {
@@ -120,13 +112,14 @@ var get_story = function(index, item_id) {
         .attr('class','sublink')
         .css('margin-left', 5));
       get_summary(data.url, item_id, data.descendants, data.score, index, data.text);
-  }).fail(function() {
-      console.log("get_story error");
-  });
+  }).fail(function(req, textStatus, error ) {
+    var err = textStatus + ", " + error;
+    console.log( "Request Failed: " + err );
+});
 }
 
 $(document).ready(function() {
-  $.getJSON(HN_TOP_STORIES_ENDPOINT).done(function(data) {
+  $.getJSON("top").done(function(data) {
     all_stories = data;
      $.each(data, function(index, value) {
 
@@ -138,8 +131,9 @@ $(document).ready(function() {
 
       get_story(index, value);
     });
-  }).fail(function() {
-  	console.log("get top stories error");
+  }).fail(function(req, textStatus, error ) {
+    var err = textStatus + ", " + error;
+    console.log( "Request Failed: " + err );
   });
 });
 </script>
