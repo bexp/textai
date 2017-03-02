@@ -66,6 +66,21 @@ def item(request, item_id):
    d.addCallback(treq.content)
    return d
 
+@app.route('/flag', methods = ['GET'])
+def flag(request):
+   print '/story requst args', request.args
+   url = request.args.get('url')[0]
+   
+   if url:
+      print 'url=', url
+      entry = cache[url]
+      print 'entry ', entry
+      old = json.loads(entry)
+      old['text'] = ''
+      cache[url] = json.dumps(old)
+
+   return "flagged: url" + url
+
 @app.route('/summary', methods = ['GET', 'POST'])
 @inlineCallbacks
 def summary(request):
