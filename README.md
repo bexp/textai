@@ -16,4 +16,4 @@ docker build -t bexpace/hntop .
 docker run -d -p 8000:8080 --restart on-failure --ulimit nofile=4096:4096 bexpace/hntop
 ```
 
-View in action at http://HN10.org
+View in action at http://hn10.org
