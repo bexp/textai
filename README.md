@@ -1,7 +1,7 @@
 ## TextAI
 REST API for Text Summarization and Keywords Extraction from a given URL
 
-Project has to major pieces:
+Project contains major pieces:
 
 1. REST API built on top of Python's Klein/Twisted server framework
 2. Frontend written in pure jQuery which uses HN realtime feed to generate
