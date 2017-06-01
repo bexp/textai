@@ -1,13 +1,13 @@
 ## TextAI
 REST API for Text Summarization and Keywords Extraction from a given URL
 
-Project contains major pieces:
+Project contains two major pieces:
 
-1. REST API built on top of Python's Klein/Twisted server framework
-2. Frontend written in pure jQuery which uses HN realtime feed to generate
+1. REST API - built on top of Python's Klein/Twisted server framework
+2. Frontend - written in pure jQuery which utilizes HN realtime feed to generate
 summaries with help of REST endpoint
 
-Everything has been wrapped into Docker container (See Dockerfile) and can be run using simple 
+Everything has been wrapped into Docker container (See Dockerfile) and can be deployed using simple 
 Docker CLI tool:
 
 ```
