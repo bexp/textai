@@ -25,5 +25,3 @@ git clone https://github.com/bexp/textai.git && cd textai
 pip install -r requirements.txt
 python app.py
 ```
-
-View in action at http://hn10.org
