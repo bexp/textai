@@ -10,7 +10,7 @@ cycler==0.10.0
 decorator==4.0.10
 eatiht==0.1.14
 enum34==1.1.6
-Flask==0.10.1
+Flask==1.0
 idna==2.2
 incremental==16.10.1
 ipaddress==1.0.18
