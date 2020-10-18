@@ -31,7 +31,7 @@ pyOpenSSL==16.2.0
 pyparsing==2.1.5
 python-dateutil==2.5.3
 pytz==2016.4
-requests==2.12.5
+requests==2.20.0
 scipy==0.17.1
 service-identity==16.0.0
 six==1.10.0
