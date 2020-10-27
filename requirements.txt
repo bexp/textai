@@ -5,7 +5,7 @@ bs4==0.0.1
 cffi==1.9.1
 chardet==2.3.0
 constantly==15.1.0
-cryptography==1.7.1
+cryptography==3.2
 cycler==0.10.0
 decorator==4.0.10
 eatiht==0.1.14
