@@ -38,6 +38,6 @@ six==1.10.0
 summa==0.0.7
 textteaser==0.3
 treq==16.12.0
-Twisted==16.6.0
+Twisted==22.2.0
 Werkzeug==0.11.13
 zope.interface==4.3.3
